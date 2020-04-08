@@ -22,6 +22,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 和RootBeanDefinition一起表示继承关系，从spring2.5开始更建议用GenericBeanDefinition#setParentName来表示
+ *
  * Bean definition for beans which inherit settings from their parent.
  * Child bean definitions have a fixed dependency on a parent bean definition.
  *

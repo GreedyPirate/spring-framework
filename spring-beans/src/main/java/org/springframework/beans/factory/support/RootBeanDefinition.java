@@ -34,6 +34,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 从注释看有2种用途
+ * 1. 从多个GenericBeanDefinition创建而来
+ * 2. 定义普通的bean，但是更应该用GenericBeanDefinition来代替
  * A root bean definition represents the merged bean definition that backs
  * a specific bean in a Spring BeanFactory at runtime. It might have been created
  * from multiple original bean definitions that inherit from each other,

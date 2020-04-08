@@ -194,6 +194,7 @@ class ConfigurationClassBeanDefinitionReader {
 
 		// Consider name and any aliases
 		List<String> names = new ArrayList<>(Arrays.asList(bean.getStringArray("name")));
+		// 这里可以看到@Bean默认用的是方法名
 		String beanName = (!names.isEmpty() ? names.remove(0) : methodName);
 
 		// Register aliases even when overridden
@@ -338,6 +339,10 @@ class ConfigurationClassBeanDefinitionReader {
 		return true;
 	}
 
+	/**
+	 * 解析@ImportResource引入的xml bean
+	 * @param importedResources
+	 */
 	private void loadBeanDefinitionsFromImportedResources(
 			Map<String, Class<? extends BeanDefinitionReader>> importedResources) {
 
@@ -351,6 +356,7 @@ class ConfigurationClassBeanDefinitionReader {
 					readerClass = GroovyBeanDefinitionReader.class;
 				}
 				else {
+					// xml解析用的是XmlBeanDefinitionReader
 					// Primarily ".xml" files but for any other extension as well
 					readerClass = XmlBeanDefinitionReader.class;
 				}
@@ -360,6 +366,7 @@ class ConfigurationClassBeanDefinitionReader {
 			if (reader == null) {
 				try {
 					// Instantiate the specified BeanDefinitionReader
+					// 通过普通的反射初始化BeanDefinitionReader，如XmlBeanDefinitionReader
 					reader = readerClass.getConstructor(BeanDefinitionRegistry.class).newInstance(this.registry);
 					// Delegate the current ResourceLoader to it if possible
 					if (reader instanceof AbstractBeanDefinitionReader) {
@@ -367,6 +374,7 @@ class ConfigurationClassBeanDefinitionReader {
 						abdr.setResourceLoader(this.resourceLoader);
 						abdr.setEnvironment(this.environment);
 					}
+					// 放入缓存，不用重新new
 					readerInstanceCache.put(readerClass, reader);
 				}
 				catch (Throwable ex) {
@@ -387,6 +395,7 @@ class ConfigurationClassBeanDefinitionReader {
 
 
 	/**
+	 * 表示@Configuration配置类中，被@Bean标注的方法
 	 * {@link RootBeanDefinition} marker subclass used to signify that a bean definition
 	 * was created from a configuration class as opposed to any other configuration source.
 	 * Used in bean overriding cases where it's necessary to determine whether the bean

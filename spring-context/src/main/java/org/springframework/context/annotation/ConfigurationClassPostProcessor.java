@@ -66,6 +66,11 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
+ *
+ * 它是一种特殊的BeanFactoryPostProcessor，即 BeanDefinitionRegistryPostProcessor
+ * 它会解析@Configuration类，里面每个@Bean方法是被ConfigurationClassBeanDefinitionReader的loadBeanDefinitions方法解析的
+ * 更具体的是在它的loadBeanDefinitionsForBeanMethod方法中
+ *
  * {@link BeanFactoryPostProcessor} used for bootstrapping processing of
  * {@link Configuration @Configuration} classes.
  *

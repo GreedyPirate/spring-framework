@@ -138,6 +138,9 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	public static final String INFER_METHOD = "(inferred)";
 
 
+	/**
+	 * bean的class对象或者是全名
+	 */
 	@Nullable
 	private volatile Object beanClass;
 
@@ -149,6 +152,9 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	@Nullable
 	private Boolean lazyInit;
 
+	/**
+	 * 默认不自动装配
+	 */
 	private int autowireMode = AUTOWIRE_NO;
 
 	private int dependencyCheck = DEPENDENCY_CHECK_NONE;
@@ -160,6 +166,10 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	private boolean primary = false;
 
+	/**
+	 * 看博客说key一直是null？ 目前看AnnotatedBeanDefinitionReader#doRegisterBean调用本类的addQualifier
+	 * typeName为注解的类名，也就是qualifiers的key
+	 */
 	private final Map<String, AutowireCandidateQualifier> qualifiers = new LinkedHashMap<>();
 
 	@Nullable
@@ -167,8 +177,10 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	private boolean nonPublicAccessAllowed = true;
 
+	// 构造函数类型解析是否是宽松的
 	private boolean lenientConstructorResolution = true;
 
+	// 对应bean属性factory-method
 	@Nullable
 	private String factoryBeanName;
 
@@ -178,6 +190,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	@Nullable
 	private ConstructorArgumentValues constructorArgumentValues;
 
+	// bean通过setter注入的属性
 	@Nullable
 	private MutablePropertyValues propertyValues;
 
@@ -193,13 +206,16 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	private boolean enforceDestroyMethod = true;
 
+	// 用AOP生成代理时有没有用到别的类
 	private boolean synthetic = false;
 
+	// 角色是用户定义的bean
 	private int role = BeanDefinition.ROLE_APPLICATION;
 
 	@Nullable
 	private String description;
 
+	// bean的来源
 	@Nullable
 	private Resource resource;
 
