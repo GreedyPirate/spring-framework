@@ -453,7 +453,7 @@ public @interface Configuration {
 	 * is self-contained and designed as a plain factory method for container use,
 	 * switch this flag to {@code false} in order to avoid CGLIB subclass processing.
 	 * <p>Turning off bean method interception effectively processes {@code @Bean}
-	 * methods individually like when declared on non-{@code @Configuration} classes,
+	 * methods individually like wh`en declared on non-{@code @Configuration} classes,
 	 * a.k.a. "@Bean Lite Mode" (see {@link Bean @Bean's javadoc}). It is therefore
 	 * behaviorally equivalent to removing the {@code @Configuration} stereotype.
 	 * @since 5.2

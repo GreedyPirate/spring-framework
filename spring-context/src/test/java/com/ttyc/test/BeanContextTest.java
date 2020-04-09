@@ -1,5 +1,6 @@
 package com.ttyc.test;
 
+import com.ttyc.test.bean.TestConfig;
 import com.ttyc.test.config.BeanConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanFactory;
@@ -44,5 +45,12 @@ public class BeanContextTest {
 
 		assertThat(SingletonBeanRegistry.class.isAssignableFrom(AnnotationConfigApplicationContext.class)).isFalse();
 		assertThat(BeanFactory.class.isAssignableFrom(AnnotationConfigApplicationContext.class)).isTrue();
+	}
+
+	@Test
+	public void test() {
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(BeanConfig.class);
+		TestConfig bean = context.getBean(TestConfig.class);
+		// AnnotatedBeanDefinitionReader-->AnnotatedGenericBeanDefinition
 	}
 }

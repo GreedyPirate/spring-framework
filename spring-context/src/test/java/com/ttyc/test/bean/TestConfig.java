@@ -1,15 +1,13 @@
 package com.ttyc.test.bean;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
-@Component
-@Scope
 public class TestConfig {
+	private int foo;
 
-	@Scheduled
-	public String test() {
-		return "";
+	public int getFoo() {
+		return foo;
+	}
+
+	public void setFoo(int foo) {
+		this.foo = foo;
 	}
 }

@@ -1,5 +1,6 @@
 package com.ttyc.test;
 
+import com.ttyc.test.bean.DefinitionBean;
 import com.ttyc.test.bean.TestConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
@@ -18,7 +19,7 @@ public class BeanDefinitionTests {
 	 */
 	@Test
 	public void testAnnotationBeanDefinition() {
-		AnnotatedGenericBeanDefinition beanDefinition = new AnnotatedGenericBeanDefinition(TestConfig.class);
+		AnnotatedGenericBeanDefinition beanDefinition = new AnnotatedGenericBeanDefinition(DefinitionBean.class);
 		AnnotationMetadata metadata = beanDefinition.getMetadata();
 		Set<String> annotationTypes = metadata.getAnnotationTypes();
 		assertThat(annotationTypes).contains("org.springframework.context.annotation.Scope");
@@ -27,5 +28,7 @@ public class BeanDefinitionTests {
 		Set<MethodMetadata> annotatedMethods = metadata.getAnnotatedMethods("org.springframework.scheduling.annotation.Scheduled");
 		assertThat(annotatedMethods).hasSize(1);
 	}
+
+
 
 }
