@@ -241,11 +241,13 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	@SuppressWarnings("unchecked")
 	protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
 			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
-
+		// FactoryBean和有别名时的处理
 		final String beanName = transformedBeanName(name);
 		Object bean;
 
 		// Eagerly check singleton cache for manually registered singletons.
+		// 从单利缓存池里获取bean
+		// 第一次获取为null，也不在创建中对象的集合(singletonsCurrentlyInCreation) 中
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
 			if (logger.isTraceEnabled()) {
@@ -320,7 +322,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				if (mbd.isSingleton()) {
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
-							return createBean(beanName, mbd, args);
+							return createBean(beanName, mbd, args); // AbstractAutowireCapableBeanFactory
 						}
 						catch (BeansException ex) {
 							// Explicitly remove instance from singleton cache: It might have been put there

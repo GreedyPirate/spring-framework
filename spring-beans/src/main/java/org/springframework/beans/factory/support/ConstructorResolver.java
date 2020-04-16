@@ -400,7 +400,7 @@ class ConstructorResolver {
 		Class<?> factoryClass;
 		boolean isStatic;
 
-		String factoryBeanName = mbd.getFactoryBeanName();
+		String factoryBeanName = mbd.getFactoryBeanName(); // 被标注@Configuration的类作为FactoryBean
 		if (factoryBeanName != null) {
 			if (factoryBeanName.equals(beanName)) {
 				throw new BeanDefinitionStoreException(mbd.getResourceDescription(), beanName,
@@ -410,7 +410,7 @@ class ConstructorResolver {
 			if (mbd.isSingleton() && this.beanFactory.containsSingleton(beanName)) {
 				throw new ImplicitlyAppearedSingletonException();
 			}
-			factoryClass = factoryBean.getClass();
+			factoryClass = factoryBean.getClass(); // factoryBean是个代理类，这里能返回真实的类：被标注@Configuration的类
 			isStatic = false;
 		}
 		else {
@@ -474,7 +474,7 @@ class ConstructorResolver {
 
 			if (candidates.size() == 1 && explicitArgs == null && !mbd.hasConstructorArgumentValues()) {
 				Method uniqueCandidate = candidates.get(0);
-				if (uniqueCandidate.getParameterCount() == 0) {
+				if (uniqueCandidate.getParameterCount() == 0) { // 这里为什么不考虑参数 > 0的情况呢？
 					mbd.factoryMethodToIntrospect = uniqueCandidate;
 					synchronized (mbd.constructorArgumentLock) {
 						mbd.resolvedConstructorOrFactoryMethod = uniqueCandidate;
@@ -647,7 +647,7 @@ class ConstructorResolver {
 								mbd, beanName, this.beanFactory, factoryBean, factoryMethod, args),
 						this.beanFactory.getAccessControlContext());
 			}
-			else {
+			else { //
 				return this.beanFactory.getInstantiationStrategy().instantiate(
 						mbd, beanName, this.beanFactory, factoryBean, factoryMethod, args);
 			}

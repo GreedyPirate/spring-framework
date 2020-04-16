@@ -1,6 +1,6 @@
 package com.ttyc.test.config;
 
-import com.ttyc.test.bean.TestConfig;
+import com.ttyc.test.bean.TestVO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,7 +8,9 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfig {
 
 	@Bean
-	public TestConfig testConfig() {
-		return new TestConfig();
+	public TestVO testConfig() {
+		TestVO testVO = new TestVO();
+		testVO.setFoo(1);
+		return testVO;
 	}
 }

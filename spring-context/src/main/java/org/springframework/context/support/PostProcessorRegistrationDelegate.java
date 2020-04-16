@@ -197,6 +197,11 @@ final class PostProcessorRegistrationDelegate {
 		beanFactory.clearMetadataCache();
 	}
 
+	/**
+	 * 注册BeanPostProcessor
+	 * @param beanFactory
+	 * @param applicationContext
+	 */
 	public static void registerBeanPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, AbstractApplicationContext applicationContext) {
 
@@ -212,8 +217,10 @@ final class PostProcessorRegistrationDelegate {
 		// Ordered, and the rest.
 		List<BeanPostProcessor> priorityOrderedPostProcessors = new ArrayList<>();
 		List<BeanPostProcessor> internalPostProcessors = new ArrayList<>();
+
 		List<String> orderedPostProcessorNames = new ArrayList<>();
 		List<String> nonOrderedPostProcessorNames = new ArrayList<>();
+
 		for (String ppName : postProcessorNames) {
 			if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
 				BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
@@ -232,6 +239,7 @@ final class PostProcessorRegistrationDelegate {
 
 		// First, register the BeanPostProcessors that implement PriorityOrdered.
 		sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
+		// 添加到了AbstractBeanFactory的beanPostProcessors属性里
 		registerBeanPostProcessors(beanFactory, priorityOrderedPostProcessors);
 
 		// Next, register the BeanPostProcessors that implement Ordered.
@@ -263,6 +271,7 @@ final class PostProcessorRegistrationDelegate {
 
 		// Re-register post-processor for detecting inner beans as ApplicationListeners,
 		// moving it to the end of the processor chain (for picking up proxies etc).
+		// 重新注册了这个BeanPostProcessor，里面实现是先删后增，相当于移到了最后面
 		beanFactory.addBeanPostProcessor(new ApplicationListenerDetector(applicationContext));
 	}
 

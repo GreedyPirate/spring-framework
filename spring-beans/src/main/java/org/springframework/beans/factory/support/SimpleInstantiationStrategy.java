@@ -144,7 +144,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 					return null;
 				});
 			}
-			else {
+			else { // 通过反射调用@Bean标注的方法
 				ReflectionUtils.makeAccessible(factoryMethod);
 			}
 
@@ -155,7 +155,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 				if (result == null) {
 					result = new NullBean();
 				}
-				return result;
+				return result; // 返回创建的bean
 			}
 			finally {
 				if (priorInvokedFactoryMethod != null) {

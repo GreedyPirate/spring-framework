@@ -1,6 +1,6 @@
 package com.ttyc.test.bean;
 
-public class TestConfig {
+public class TestVO {
 	private int foo;
 
 	public int getFoo() {

@@ -503,7 +503,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
-			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
+			Object bean = resolveBeforeInstantiation(beanName, mbdToUse); // 有可能一些BeanPostProcessor直接创建bean了
 			if (bean != null) {
 				return bean;
 			}
@@ -553,7 +553,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (mbd.isSingleton()) {
 			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
 		}
-		if (instanceWrapper == null) {
+		if (instanceWrapper == null) { // BeanWrapper.setBeanInstance(创建的对象)
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
 		final Object bean = instanceWrapper.getWrappedInstance();
@@ -1169,7 +1169,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		Supplier<?> instanceSupplier = mbd.getInstanceSupplier();
-		if (instanceSupplier != null) {
+		if (instanceSupplier != null) { // 可以用instanceSupplier直接创建bean
 			return obtainFromSupplier(instanceSupplier, beanName);
 		}
 
@@ -1789,7 +1789,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		try {
-			invokeInitMethods(beanName, wrappedBean, mbd);
+			invokeInitMethods(beanName, wrappedBean, mbd); // InitializingBean的afterProperties方法和init-method方法
 		}
 		catch (Throwable ex) {
 			throw new BeanCreationException(

@@ -519,13 +519,16 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
+			// 创建beanFactory
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
+			// 初始化beanFactory
 			prepareBeanFactory(beanFactory);
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
+				// 普通的IOC容器子类是空的，其它的例如web容器可以注册一些"BeanPostProcessor"
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
@@ -539,6 +542,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Register bean processors that intercept bean creation.
 				// 这里仅仅是查找并注册BeanPostProcessor到beanFactory
+				// AutowiredAnnotationBeanPostProcessor 处理被@Autowired注解修饰的bean并注入
+				// CommonAnnotationBeanPostProcessor 处理@PreDestroy、@PostConstruct、@Resource ...
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.
@@ -548,12 +553,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
+				// 交给子类实现
 				onRefresh();
 
 				// Check for listener beans and register them.
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
+				// 初始化所有的bean(非懒加载的)，里面会调用上面注册的BeanPostProcessor
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
@@ -714,6 +721,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime
 		// (e.g. through an @Bean method registered by ConfigurationClassPostProcessor)
+		// Aspectj LWT 类加载时织入
 		if (beanFactory.getTempClassLoader() == null && beanFactory.containsBean(LOAD_TIME_WEAVER_BEAN_NAME)) {
 			beanFactory.addBeanPostProcessor(new LoadTimeWeaverAwareProcessor(beanFactory));
 			beanFactory.setTempClassLoader(new ContextTypeMatchClassLoader(beanFactory.getBeanClassLoader()));
@@ -870,6 +878,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize LoadTimeWeaverAware beans early to allow for registering their transformers early.
+		// 先初始化AOP LTW相关的bean
 		String[] weaverAwareNames = beanFactory.getBeanNamesForType(LoadTimeWeaverAware.class, false, false);
 		for (String weaverAwareName : weaverAwareNames) {
 			getBean(weaverAwareName);

@@ -1,19 +1,17 @@
 package com.ttyc.test;
 
-import com.ttyc.test.bean.TestConfig;
+import com.ttyc.test.bean.TestVO;
 import com.ttyc.test.config.BeanConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.SingletonBeanRegistry;
 import org.springframework.beans.testfixture.beans.TestBean;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation6.ComponentForScanning;
 
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -50,7 +48,7 @@ public class BeanContextTest {
 	@Test
 	public void test() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(BeanConfig.class);
-		TestConfig bean = context.getBean(TestConfig.class);
+		TestVO bean = context.getBean(TestVO.class);
 		// AnnotatedBeanDefinitionReader-->AnnotatedGenericBeanDefinition
 	}
 }
