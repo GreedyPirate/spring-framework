@@ -225,7 +225,7 @@ class ConfigurationClassParser {
 		if (this.conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.PARSE_CONFIGURATION)) {
 			return;
 		}
-
+		// 没走
 		ConfigurationClass existingClass = this.configurationClasses.get(configClass);
 		if (existingClass != null) {
 			if (configClass.isImported()) {
@@ -265,7 +265,7 @@ class ConfigurationClassParser {
 	protected final SourceClass doProcessConfigurationClass(
 			ConfigurationClass configClass, SourceClass sourceClass, Predicate<String> filter)
 			throws IOException {
-
+		// @Configuration继承自@Component
 		if (configClass.getMetadata().isAnnotated(Component.class.getName())) {
 			// Recursively process any member (nested) classes first
 			processMemberClasses(configClass, sourceClass, filter);
@@ -326,7 +326,7 @@ class ConfigurationClassParser {
 		for (MethodMetadata methodMetadata : beanMethods) {
 			configClass.addBeanMethod(new BeanMethod(methodMetadata, configClass));
 		}
-
+		// 如果配置类实现了接口，要执行接口里的default方法，可忽略
 		// Process default methods on interfaces
 		processInterfaces(configClass, sourceClass);
 
@@ -342,6 +342,7 @@ class ConfigurationClassParser {
 		}
 
 		// No superclass -> processing is complete
+		// 结束，停止外层循环
 		return null;
 	}
 
@@ -399,7 +400,9 @@ class ConfigurationClassParser {
 	 */
 	private Set<MethodMetadata> retrieveBeanMethodMetadata(SourceClass sourceClass) {
 		AnnotationMetadata original = sourceClass.getMetadata();
+		// 获取被@Bean标注的方法，JVM反射方式
 		Set<MethodMetadata> beanMethods = original.getAnnotatedMethods(Bean.class.getName());
+		// JVM返回的方法在顺序上是随机的，这里要用ASM来获取方法声明的顺序，关于ASM的两个类：ClassReader和ClassVisitor
 		if (beanMethods.size() > 1 && original instanceof StandardAnnotationMetadata) {
 			// Try reading the class file via ASM for deterministic declaration order...
 			// Unfortunately, the JVM's standard reflection returns methods in arbitrary
@@ -407,9 +410,13 @@ class ConfigurationClassParser {
 			try {
 				AnnotationMetadata asm =
 						this.metadataReaderFactory.getMetadataReader(original.getClassName()).getAnnotationMetadata();
+				// 通过ASM解析出来的方法列表
 				Set<MethodMetadata> asmMethods = asm.getAnnotatedMethods(Bean.class.getName());
 				if (asmMethods.size() >= beanMethods.size()) {
+					// 注意是LinkedHashSet
 					Set<MethodMetadata> selectedMethods = new LinkedHashSet<>(asmMethods.size());
+					// 两个for的作用：
+					// 既是按asm方法列表的顺序添加，也保证了asm解析出来的方法一定在jvm解析的方法列表中，这样才能添加到返回结果中
 					for (MethodMetadata asmMethod : asmMethods) {
 						for (MethodMetadata beanMethod : beanMethods) {
 							if (beanMethod.getMethodName().equals(asmMethod.getMethodName())) {

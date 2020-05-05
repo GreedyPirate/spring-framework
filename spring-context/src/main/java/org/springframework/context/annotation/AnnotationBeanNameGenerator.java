@@ -85,6 +85,9 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	}
 
 	/**
+	 * 从注解里面获取beanName，@Component，@ManagedBean，@Named的value属性就是beanName
+	 * 不限定于这三个注解，继承了这三个注解的也可以，比如@Configuration
+	 * 如果同时设置了多个，value必须一样，不然该方法会抛出IllegalStateException
 	 * Derive a bean name from one of the annotations on the class.
 	 * @param annotatedDef the annotation-aware bean definition
 	 * @return the bean name, or {@code null} if none is found

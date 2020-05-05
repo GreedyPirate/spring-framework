@@ -58,20 +58,24 @@ final class PostProcessorRegistrationDelegate {
 		// Invoke BeanDefinitionRegistryPostProcessors first, if any.
 		Set<String> processedBeans = new HashSet<>();
 
+		// DefaultListableBeanFactory继承了BeanDefinitionRegistry
 		if (beanFactory instanceof BeanDefinitionRegistry) {
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
 
-			// BeanDefinitionRegistryPostProcessor继承了BeanFactoryPostProcessor，可以理解为非常规的后置处理器
+			// 这里调用的是通过AbstractApplicationContext#addBeanFactoryPostProcessor添加进来的BeanDefinitionRegistryPostProcessor
+			// 例如Spring boot通过实现ApplicationContextInitializer接口添加了很多BeanDefinitionRegistryPostProcessor
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
 					BeanDefinitionRegistryPostProcessor registryProcessor =
 							(BeanDefinitionRegistryPostProcessor) postProcessor;
+					// 执行
 					registryProcessor.postProcessBeanDefinitionRegistry(registry);
 					registryProcessors.add(registryProcessor);
 				}
 				else {
+					// 这里是普通的BeanFactoryPostProcessor，仅仅添加到了集合，并没有开始执行
 					regularPostProcessors.add(postProcessor);
 				}
 			}

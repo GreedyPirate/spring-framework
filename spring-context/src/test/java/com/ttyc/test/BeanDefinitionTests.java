@@ -1,10 +1,8 @@
 package com.ttyc.test;
 
 import com.ttyc.test.bean.DefinitionBean;
-import com.ttyc.test.bean.TestConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
-import org.springframework.context.annotation6.ConfigForScanning;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.MethodMetadata;
 

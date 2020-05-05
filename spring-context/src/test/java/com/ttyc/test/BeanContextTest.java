@@ -46,7 +46,7 @@ public class BeanContextTest {
 	}
 
 	@Test
-	public void test() {
+	public void testImpl() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(BeanConfig.class);
 		TestVO bean = context.getBean(TestVO.class);
 		// AnnotatedBeanDefinitionReader-->AnnotatedGenericBeanDefinition

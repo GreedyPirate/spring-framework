@@ -128,8 +128,10 @@ class ConfigurationClassBeanDefinitionReader {
 	private void loadBeanDefinitionsForConfigurationClass(
 			ConfigurationClass configClass, TrackedConditionEvaluator trackedConditionEvaluator) {
 
+		// 用Condition来判断是否注册bean
 		if (trackedConditionEvaluator.shouldSkip(configClass)) {
 			String beanName = configClass.getBeanName();
+			// 被跳过的就移除
 			if (StringUtils.hasLength(beanName) && this.registry.containsBeanDefinition(beanName)) {
 				this.registry.removeBeanDefinition(beanName);
 			}
@@ -144,6 +146,7 @@ class ConfigurationClassBeanDefinitionReader {
 			loadBeanDefinitionsForBeanMethod(beanMethod);
 		}
 
+		// 现在才从@ImportResource中加载BeanDefinition
 		loadBeanDefinitionsFromImportedResources(configClass.getImportedResources());
 		loadBeanDefinitionsFromRegistrars(configClass.getImportBeanDefinitionRegistrars());
 	}
@@ -180,6 +183,7 @@ class ConfigurationClassBeanDefinitionReader {
 		MethodMetadata metadata = beanMethod.getMetadata();
 		String methodName = metadata.getMethodName();
 
+		// 关于Bean加载的条件判断，如Spring boot中的@ConditionalOnMissingBean
 		// Do we need to mark the bean as skipped by its condition?
 		if (this.conditionEvaluator.shouldSkip(metadata, ConfigurationPhase.REGISTER_BEAN)) {
 			configClass.skippedBeanMethods.add(methodName);
@@ -189,20 +193,23 @@ class ConfigurationClassBeanDefinitionReader {
 			return;
 		}
 
+		// 获取@Bean的元信息，包含里面各个属性值
 		AnnotationAttributes bean = AnnotationConfigUtils.attributesFor(metadata, Bean.class);
 		Assert.state(bean != null, "No @Bean annotation attributes");
 
 		// Consider name and any aliases
 		List<String> names = new ArrayList<>(Arrays.asList(bean.getStringArray("name")));
-		// 这里可以看到@Bean默认用的是方法名
+		// 默认用方法名作为bean name
 		String beanName = (!names.isEmpty() ? names.remove(0) : methodName);
 
 		// Register aliases even when overridden
+		// 注册别名
 		for (String alias : names) {
 			this.registry.registerAlias(beanName, alias);
 		}
 
 		// Has this effectively been overridden before (e.g. via XML)?
+		// 是否被重复注册了
 		if (isOverriddenByExistingDefinition(beanMethod, beanName)) {
 			if (beanName.equals(beanMethod.getConfigurationClass().getBeanName())) {
 				throw new BeanDefinitionStoreException(beanMethod.getConfigurationClass().getResource().getDescription(),
@@ -475,8 +482,10 @@ class ConfigurationClassBeanDefinitionReader {
 					}
 				}
 				if (skip == null) {
+					// Condition相关的判断
 					skip = conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.REGISTER_BEAN);
 				}
+				// 暂存到一个集合中，表示该配置"类"被跳过了
 				this.skipped.put(configClass, skip);
 			}
 			return skip;

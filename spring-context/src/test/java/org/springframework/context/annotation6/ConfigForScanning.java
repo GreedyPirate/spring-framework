@@ -16,14 +16,22 @@
 
 package org.springframework.context.annotation6;
 
+import com.ttyc.test.bean.TestVO;
 import org.springframework.beans.testfixture.beans.TestBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+//@ManagedBean("good")
+//@Named("good")
 public class ConfigForScanning {
 	@Bean
 	public TestBean testBean() {
 		return new TestBean();
+	}
+
+	@Bean
+	public TestVO testVO() {
+		return new TestVO();
 	}
 }

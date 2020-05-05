@@ -255,9 +255,12 @@ public class AnnotatedBeanDefinitionReader {
 			return;
 		}
 
+		// 除了构造方法和工厂bean，还可以通过一个Supplier创建bean
 		abd.setInstanceSupplier(supplier);
+		// 解析scope信息，singleton
 		ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
 		abd.setScope(scopeMetadata.getScopeName());
+		// 实现类是AnnotationBeanNameGenerator，获取beanName，实现过程看里面注释
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
 		// 填充lazy,primary,dependOn,role,description等信息
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);

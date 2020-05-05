@@ -209,6 +209,11 @@ final class ConfigurationClass {
 		return this.importedResources;
 	}
 
+	/**
+	 * proxyBeanMethods为true时，由于CGLIB限制，@Configuration类不能是final
+	 * 如果@Bean方法是private，final的方法，无法被CGLIB重写
+	 * @param problemReporter
+	 */
 	public void validate(ProblemReporter problemReporter) {
 		// A configuration class may not be final (CGLIB limitation) unless it declares proxyBeanMethods=false
 		Map<String, Object> attributes = this.metadata.getAnnotationAttributes(Configuration.class.getName());
